@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// * Now write here your data model
+
+model Categories {
+  id          Int    @id
+  name        String
+  description String
+}
+
+model Medicines {
+  id           Int    @id
+  name         String
+  description  String
+  price        Float
+  stock        Int
+  manufacturer String
+  image        String
+}
+
+enum Status {
+  PENDING
+  SHIPPED
+  DELIVERED
+}
+
+model Orders {
+  id              String @id
+  totalPrice      Float
+  shippingAddress String
+  status          Status
+}
+
+model Reviews {
+  id String @id
+  rating Float
+  comment String
+}
