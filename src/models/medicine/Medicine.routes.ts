@@ -14,5 +14,13 @@ const router = Router()
 
 router.post('/medicine',AuthMiddleware(Role.SELLER,Role.ADMIN),MedicineController.createMedicine)
 
+router.get('/medicine',MedicineController.getAllMedicine)
+
+router.get('/medicine/:id',MedicineController.getMedicineById)
+
+router.put('/medicine/:id',MedicineController.updateMedicine)
+
+router.delete('/medicine/:id',MedicineController.deleteMedicine)
+
 export const medicineRouter: Router = router
 
