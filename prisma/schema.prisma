@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -10,53 +9,120 @@ datasource db {
 
 // * Now write here your data model
 
-model Categories {
-  id          Int    @id
-  name        String
-  description String
+enum Role {
+  ADMIN
+  SELLER
+  CUSTOMER
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  CANCELLED
+  DELIVERED
 }
 
 model Medicines {
-  id           Int    @id
+  id           String  @id @default(uuid())
   name         String
   description  String
   price        Float
   stock        Int
+  image        String?
   manufacturer String
-  image        String
-}
 
-enum Status {
-  PENDING
-  SHIPPED
-  DELIVERED
+  // * Category_id
+
+  Category_id String
+  Category    Categories @relation(fields: [Category_id], references: [id], onDelete: Cascade)
+
+  // * Seller_id
+  Seller_id String
+  Seller    User   @relation(fields: [Seller_id], references: [id], onDelete: Cascade)
+
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  reviews         Reviews[]
+  ordersMedicines Orders_Medicines[]
 }
 
 model Orders {
-  id              String @id
-  totalPrice      Float
+  id              String      @id @default(uuid())
+  status          OrderStatus // * enum
+  paymentMethod   String
+  TotalPrice      Float
   shippingAddress String
-  status          Status
+  createdAt       DateTime
+  updatedAt       DateTime
+
+  // * customer_id
+
+  Customer_id     String
+  Customer        User               @relation(fields: [Customer_id], references: [id], onDelete: Cascade)
+  ordersMedicines Orders_Medicines[]
+}
+
+model Categories {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+
+  // * medicines
+  medicines Medicines[]
 }
 
 model Reviews {
-  id      String @id
-  rating  Float
-  comment String
+  // * customer_id medicine_id
+  id        String   @id @default(uuid())
+  rating    Int
+  commnet   String
+  createdAt DateTime @default(now())
+
+  medicine_id String
+  Medicine    Medicines @relation(fields: [medicine_id], references: [id], onDelete: Cascade)
+
+  customer_id String
+  Customer    User   @relation(fields: [customer_id], references: [id])
+}
+
+model Orders_Medicines {
+  id String @id @default(uuid())
+  // * order_id medicine_id seller_id
+
+  medicine_id String
+  Medicine    Medicines @relation(fields: [medicine_id], references: [id], onDelete: Cascade)
+
+  order_id String
+  Order    Orders @relation(fields: order_id, references: [id], onDelete: Cascade)
+
+  seller_id String
+  Seller    User   @relation(fields: [seller_id], references: [id], onDelete: Cascade)
+
+  quantity Int
+  price    Float
 }
 
 model User {
-  id            String    @id
+  id            String    @id @default(uuid())
   name          String
-  email         String
+  email         String    @unique
   emailVerified Boolean   @default(false)
+  role          Role      @default(CUSTOMER)
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
 
-  @@unique([email])
+  // * orders for customer
+  // * medicines for seller
+  medicines       Medicines[]
+  orders          Orders[]
+  reviews         Reviews[]
+  ordersMedicines Orders_Medicines[]
+
   @@map("user")
 }
 
@@ -107,3 +173,7 @@ model Verification {
   @@index([identifier])
   @@map("verification")
 }
+
+// * first i have to complete the full database desigin
+// * Then i have to write all the queries
+// * Then i have to create authorization mechansim
