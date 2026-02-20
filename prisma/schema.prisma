@@ -24,6 +24,7 @@ enum OrderStatus {
 }
 
 
+
 // * need category and user model to run this model because of the relation
 model Medicines {
   id           String  @id @default(uuid())
@@ -78,6 +79,8 @@ model Categories {
   // * medicines
   medicines Medicines[]
 }
+
+
 
 model Reviews {
   // * customer_id medicine_id

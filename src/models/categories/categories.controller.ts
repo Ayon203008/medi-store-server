@@ -38,9 +38,6 @@ const getCategories= async (req:Request,res:Response)=>{
     }   
 }
 
-
-
-
 export const CategoriesController={
     createCategories,
     getCategories

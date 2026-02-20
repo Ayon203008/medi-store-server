@@ -4,6 +4,9 @@ import { medicineServices } from "./Medicine.services"
 
 const createMedicine =async (req:Request, res:Response) => {
     try {
+
+        
+
         const result = await medicineServices.createMedicine(req.body)
         res.status(200).json({
             message:"Medicine inserted successfully",
