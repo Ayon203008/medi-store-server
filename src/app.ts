@@ -3,6 +3,8 @@ import express, { Application, Request, Response } from "express";
 import { auth } from "./lib/auth";
 const app: Application = express();
 import cors from "cors";
+import { medicineRouter } from "./models/medicine/Medicine.routes";
+import { CategoriesRouter } from "./models/categories/categories.routes";
 
 
 app.all('/api/auth/{*any}', toNodeHandler(auth));
@@ -12,6 +14,11 @@ app.use(cors({
     origin: process.env.APP_URL,
     credentials: true
 }))
+
+
+app.use('/api/v1',medicineRouter)
+
+app.use('/api/v1',CategoriesRouter)
 
 
 app.get("/", (req: Request, res: Response) => {

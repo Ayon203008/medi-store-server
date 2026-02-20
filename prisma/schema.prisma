@@ -23,6 +23,8 @@ enum OrderStatus {
   DELIVERED
 }
 
+
+// * need category and user model to run this model because of the relation
 model Medicines {
   id           String  @id @default(uuid())
   name         String
@@ -47,6 +49,8 @@ model Medicines {
   ordersMedicines Orders_Medicines[]
 }
 
+
+
 model Orders {
   id              String      @id @default(uuid())
   status          OrderStatus // * enum
@@ -62,6 +66,8 @@ model Orders {
   Customer        User               @relation(fields: [Customer_id], references: [id], onDelete: Cascade)
   ordersMedicines Orders_Medicines[]
 }
+
+
 
 model Categories {
   id          String   @id @default(uuid())
