@@ -30,6 +30,17 @@ const createOrder=async(orderData:any,customerId:string)=>{
         }
     })
 
+    await prisma.medicines.update({
+        where: {
+            id: orderData.medicine_id
+        },
+        data: {
+            stock: {
+                decrement: orderData.quantity 
+            }
+        }
+    })
+
     return result
 }
 
@@ -53,15 +64,14 @@ const getSelleOrders=async(sellerId:string)=>{
     return result
 }
 
-const getAllOrder=async()=>{
-    const result= await prisma.orders.findMany()
-    return result
-}
 
 const getOrderById=async(CustomerId:string)=>{
-    const result= await prisma.orders.findUnique({
+    const result= await prisma.orders.findMany({
         where:{
-            id:CustomerId
+            Customer_id:CustomerId 
+        },
+        include:{
+            Medicine:true
         }
     })
     return result
@@ -70,7 +80,6 @@ const getOrderById=async(CustomerId:string)=>{
 export const  orderServices={
     createOrder,
     getCustomerOrders,
-    getAllOrder,
     getOrderById,
     getSelleOrders
 }

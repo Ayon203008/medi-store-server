@@ -18,7 +18,9 @@ const createOrders = async (req: Request, res: Response) => {
             })
         }
 
-        const customerId = req.user?.id
+       
+        const customerId = session.user.id
+
         const result = await orderServices.createOrder(req.body, customerId as string)
         res.status(201).json({
             success: true,
@@ -34,7 +36,6 @@ const createOrders = async (req: Request, res: Response) => {
     }
 }
 
-
 const getCustomerOrders = async (req: Request, res: Response) => {
     try {
         const session = await auth.api.getSession({
@@ -46,7 +47,13 @@ const getCustomerOrders = async (req: Request, res: Response) => {
                 success: false
             })
         }
-        const CustomerId = req.user?.id
+         if (!session || session.user.role !== Role.CUSTOMER) {
+            return res.status(401).json({
+                message: "Unauthorized",
+                success: false
+            })
+        }
+        const CustomerId = session.user.id
         const result = await orderServices.getCustomerOrders(CustomerId as string)
         res.status(201).json({
             success: true,
@@ -60,20 +67,19 @@ const getCustomerOrders = async (req: Request, res: Response) => {
         })
     }
 }
-
 const getSellerOrders = async (req: Request, res: Response) => {
     try {
 
         const session = await auth.api.getSession({
             headers: req.headers as any
         })
-        if (!session || session.user.role === Role.SELLER) {
+        if (!session || session.user.role !== Role.SELLER) {
             return res.status(401).json({
                 message: "Unauthorized",
                 success: false
             })
         }
-       const sellerId = req.user?.id
+       const sellerId =session.user.id
         const result = await orderServices.getSelleOrders(sellerId as string)
         res.status(201).json({
             success: true,
@@ -88,32 +94,6 @@ const getSellerOrders = async (req: Request, res: Response) => {
     }
 }
 
-
-const getAllOrders = async (req: Request, res: Response) => {
-    try {
-        const result = await orderServices.getAllOrder()
-        res.status(201).json({
-            success: true,
-            data: result,
-            message: "Order get Successfully"
-        })
-
-        if(!result || result.length===0){
-           return res.status(201).json({
-                success: true,
-                message: "Orders are empty"
-            })
-        }
-
-    } catch (err) {
-        res.status(500).json({
-            message: "Failed to get the order",
-            success: false
-        })
-    }
-}
-
-
 const getOrdersById = async (req: Request, res: Response) => {
     try {
         const session = await auth.api.getSession({
@@ -125,7 +105,7 @@ const getOrdersById = async (req: Request, res: Response) => {
                 success: false
             })
         }
-        const CustomerId = req.user?.id
+        const CustomerId = session.user.id
 
         const result = await orderServices.getOrderById(CustomerId as string)
         res.status(201).json({
@@ -146,7 +126,7 @@ const getOrdersById = async (req: Request, res: Response) => {
 
 export const orderController = {
     createOrders,
-    getAllOrders,
+  
     getSellerOrders,
     getOrdersById,
     getCustomerOrders
