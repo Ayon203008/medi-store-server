@@ -59,6 +59,8 @@ const updateMedicine = async (id: string, updateData: any) => {
     return result
 }
 
+
+
 const deleteMedicine=async(id:string)=>{
     const result = await prisma.medicines.delete({
         where:{

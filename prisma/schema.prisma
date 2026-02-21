@@ -30,17 +30,16 @@ model Medicines {
   image        String?
   manufacturer String
 
-
   Category_id String
   Category    Categories @relation(fields: [Category_id], references: [id], onDelete: Cascade)
 
   Seller_id String
   Seller    User   @relation(fields: [Seller_id], references: [id], onDelete: Cascade)
 
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
-  reviews         Reviews[]
-  ordersMedicines Orders_Medicines[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  reviews   Reviews[]
+  orders    Orders[]
 }
 
 model Orders {
@@ -48,30 +47,21 @@ model Orders {
   status          OrderStatus @default(PENDING) // * enum
   paymentMethod   String
   TotalPrice      Float
+  quantity        Int
   shippingAddress String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  Seller_id String
+  Seller    User   @relation("SellerOrders", fields: [Seller_id], references: [id])
+
+  Medicine_id String
+  Medicine    Medicines @relation(fields: [Medicine_id], references: [id])
+
+  Customer_id String
+  Customer    User   @relation("CustomerOrders", fields: [Customer_id], references: [id], onDelete: Cascade)
 
 
-  Customer_id     String
-  Customer        User               @relation(fields: [Customer_id], references: [id], onDelete: Cascade)
-  ordersMedicines Orders_Medicines[]
-}
-
-model Orders_Medicines {
-  id String @id @default(uuid())
-
-  medicine_id String
-  Medicine    Medicines @relation(fields: [medicine_id], references: [id], onDelete: Cascade)
-
-  order_id String
-  Order    Orders @relation(fields: order_id, references: [id], onDelete: Cascade)
-
-  seller_id String
-  Seller    User   @relation(fields: [seller_id], references: [id], onDelete: Cascade)
-
-  quantity Int
-  price    Float
 }
 
 model Categories {
@@ -108,14 +98,16 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
-
-  medicines       Medicines[]
-  orders          Orders[]
-  reviews         Reviews[]
-  ordersMedicines Orders_Medicines[]
+  medicines Medicines[]
+ 
+  reviews   Reviews[]
+  CustomerOrders    Orders[] @relation("CustomerOrders")
+  SellerOrders    Orders[] @relation("SellerOrders")
 
   @@map("user")
 }
+
+
 
 model Session {
   id        String   @id

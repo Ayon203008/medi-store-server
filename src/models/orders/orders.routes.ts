@@ -11,9 +11,7 @@ router.post("/",orderController.createOrders)
 
 router.get("/",orderController.getAllOrders)
 
-
 router.get("/:id",orderController.getOrdersById)
-
 
 
 
