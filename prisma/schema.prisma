@@ -7,8 +7,6 @@ datasource db {
   provider = "postgresql"
 }
 
-// * Now write here your data model
-
 enum Role {
   ADMIN
   SELLER
@@ -23,9 +21,6 @@ enum OrderStatus {
   DELIVERED
 }
 
-
-
-// * need category and user model to run this model because of the relation
 model Medicines {
   id           String  @id @default(uuid())
   name         String
@@ -35,12 +30,10 @@ model Medicines {
   image        String?
   manufacturer String
 
-  // * Category_id
 
   Category_id String
   Category    Categories @relation(fields: [Category_id], references: [id], onDelete: Cascade)
 
-  // * Seller_id
   Seller_id String
   Seller    User   @relation(fields: [Seller_id], references: [id], onDelete: Cascade)
 
@@ -50,55 +43,23 @@ model Medicines {
   ordersMedicines Orders_Medicines[]
 }
 
-
-
 model Orders {
   id              String      @id @default(uuid())
-  status          OrderStatus // * enum
+  status          OrderStatus @default(PENDING) // * enum
   paymentMethod   String
   TotalPrice      Float
   shippingAddress String
-  createdAt       DateTime
-  updatedAt       DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-  // * customer_id
 
   Customer_id     String
   Customer        User               @relation(fields: [Customer_id], references: [id], onDelete: Cascade)
   ordersMedicines Orders_Medicines[]
 }
 
-
-
-model Categories {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  description String?
-  createdAt   DateTime @default(now())
-
-  // * medicines
-  medicines Medicines[]
-}
-
-
-
-model Reviews {
-  // * customer_id medicine_id
-  id        String   @id @default(uuid())
-  rating    Int
-  commnet   String
-  createdAt DateTime @default(now())
-
-  medicine_id String
-  Medicine    Medicines @relation(fields: [medicine_id], references: [id], onDelete: Cascade)
-
-  customer_id String
-  Customer    User   @relation(fields: [customer_id], references: [id])
-}
-
 model Orders_Medicines {
   id String @id @default(uuid())
-  // * order_id medicine_id seller_id
 
   medicine_id String
   Medicine    Medicines @relation(fields: [medicine_id], references: [id], onDelete: Cascade)
@@ -113,6 +74,28 @@ model Orders_Medicines {
   price    Float
 }
 
+model Categories {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+
+  medicines Medicines[]
+}
+
+model Reviews {
+  id        String   @id @default(uuid())
+  rating    Int
+  commnet   String
+  createdAt DateTime @default(now())
+
+  medicine_id String
+  Medicine    Medicines @relation(fields: [medicine_id], references: [id], onDelete: Cascade)
+
+  customer_id String
+  Customer    User   @relation(fields: [customer_id], references: [id])
+}
+
 model User {
   id            String    @id @default(uuid())
   name          String
@@ -125,8 +108,7 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
-  // * orders for customer
-  // * medicines for seller
+
   medicines       Medicines[]
   orders          Orders[]
   reviews         Reviews[]
@@ -182,7 +164,3 @@ model Verification {
   @@index([identifier])
   @@map("verification")
 }
-
-// * first i have to complete the full database desigin
-// * Then i have to write all the queries
-// * Then i have to create authorization mechansim

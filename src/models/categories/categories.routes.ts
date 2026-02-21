@@ -3,8 +3,8 @@ import { CategoriesController } from "./categories.controller";
 
 const router = Router()
 
-router.post("/categories",CategoriesController.createCategories)
+router.post("/",CategoriesController.createCategories)
 
-router.get("/categories",CategoriesController.getCategories)
+router.get("/",CategoriesController.getCategories)
 
 export const CategoriesRouter: Router = router

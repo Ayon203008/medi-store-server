@@ -5,6 +5,7 @@ const app: Application = express();
 import cors from "cors";
 import { medicineRouter } from "./models/medicine/Medicine.routes";
 import { CategoriesRouter } from "./models/categories/categories.routes";
+import { OrderRoutes } from "./models/orders/orders.routes";
 
 
 app.all('/api/auth/{*any}', toNodeHandler(auth));
@@ -16,9 +17,11 @@ app.use(cors({
 }))
 
 
-app.use('/api/v1',medicineRouter)
+app.use('/api/medicine',medicineRouter)
 
-app.use('/api/v1',CategoriesRouter)
+app.use('/api/categories',CategoriesRouter)
+
+app.use('/api/orders',OrderRoutes)
 
 
 app.get("/", (req: Request, res: Response) => {
