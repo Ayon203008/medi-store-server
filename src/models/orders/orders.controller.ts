@@ -102,8 +102,9 @@ const getOrdersById = async (req: Request, res: Response) => {
                 success: false
             })
         }
+        const {id}=req.params
         const CustomerId = session.user.id
-        const result = await orderServices.getOrderById(CustomerId as string)
+        const result = await orderServices.getOrderById(CustomerId as string,id as string)
         res.status(201).json({
             success: true,
             data: result,
@@ -117,9 +118,42 @@ const getOrdersById = async (req: Request, res: Response) => {
     }
 }
 
+const updateOrders=async(req:Request,res:Response)=>{
+    try{
+        const session=await auth.api.getSession({
+            headers:req.headers as any
+        })
+
+        if(!session||session.user.role!==Role.SELLER){
+            return res.status(401).json({
+                message:"Unauthorized",
+                success:false
+            })
+        }
+
+        const {id}=req.params
+        const {status}=req.body
+        const SellerId=session.user.id
+        const result= await orderServices.UpdateOrders(SellerId as string,status,id as string)
+        res.status(200).json({
+            message:"Order updated successfully",
+            success:true,
+            data:result
+        })
+    }catch(err:any){
+        res.status(500).json({
+            message:"Order update failed",
+            success:false,
+            error:err.message
+        })
+    }
+}
+
+
 export const orderController = {
     createOrders,
     getSellerOrders,
     getOrdersById,
-    getCustomerOrders
+    getCustomerOrders,
+    updateOrders
 }

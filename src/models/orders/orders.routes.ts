@@ -10,9 +10,11 @@ const router=Router()
 
 router.post("/",orderController.createOrders)
 
-router.get("/customer",orderController.getCustomerOrders)
+router.get("/customer",AuthMiddleware(Role.CUSTOMER),orderController.getCustomerOrders)
 
-router.get("/seller",orderController.getSellerOrders)
+router.get("/seller",AuthMiddleware(Role.SELLER),orderController.getSellerOrders)
+
+router.put("/:id",AuthMiddleware(Role.SELLER),orderController.updateOrders)
 
 router.get("/:id",orderController.getOrdersById)
 

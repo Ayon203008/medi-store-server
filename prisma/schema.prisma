@@ -21,6 +21,11 @@ enum OrderStatus {
   DELIVERED
 }
 
+enum UserStatus {
+  ACTIVE
+  BLOCKED
+}
+
 model Medicines {
   id           String  @id @default(uuid())
   name         String
@@ -60,8 +65,6 @@ model Orders {
 
   Customer_id String
   Customer    User   @relation("CustomerOrders", fields: [Customer_id], references: [id], onDelete: Cascade)
-
-
 }
 
 model Categories {
@@ -87,27 +90,26 @@ model Reviews {
 }
 
 model User {
-  id            String    @id @default(uuid())
+  id            String     @id @default(uuid())
   name          String
-  email         String    @unique
-  emailVerified Boolean   @default(false)
-  role          Role      @default(CUSTOMER)
+  email         String     @unique
+  emailVerified Boolean    @default(false)
+  role          Role       @default(CUSTOMER)
+  status        UserStatus @default(ACTIVE)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
   sessions      Session[]
   accounts      Account[]
 
   medicines Medicines[]
- 
-  reviews   Reviews[]
-  CustomerOrders    Orders[] @relation("CustomerOrders")
-  SellerOrders    Orders[] @relation("SellerOrders")
+
+  reviews        Reviews[]
+  CustomerOrders Orders[]  @relation("CustomerOrders")
+  SellerOrders   Orders[]  @relation("SellerOrders")
 
   @@map("user")
 }
-
-
 
 model Session {
   id        String   @id

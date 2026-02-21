@@ -75,5 +75,7 @@ const updateReview=async(req:Request,res:Response)=>{
 
 
 export const ReviewsController = {
-    createReview
+    createReview,
+    deleteReview,
+    updateReview
 }

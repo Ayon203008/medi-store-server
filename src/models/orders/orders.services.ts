@@ -65,9 +65,10 @@ const getSelleOrders=async(sellerId:string)=>{
 }
 
 
-const getOrderById=async(CustomerId:string)=>{
+const getOrderById=async(CustomerId:string,id:string)=>{
     const result= await prisma.orders.findMany({
         where:{
+            id:id,
             Customer_id:CustomerId 
         },
         include:{
@@ -77,9 +78,23 @@ const getOrderById=async(CustomerId:string)=>{
     return result
 }
 
+const UpdateOrders=async(SellerId:string,status:any,id:string)=>{
+    const result = await prisma.orders.update({
+        where:{
+            id:id,
+            Seller_id:SellerId
+        },
+        data:{
+            status:status
+        }
+    })
+    return result
+}
+
 export const  orderServices={
     createOrder,
     getCustomerOrders,
     getOrderById,
-    getSelleOrders
+    getSelleOrders,
+    UpdateOrders
 }

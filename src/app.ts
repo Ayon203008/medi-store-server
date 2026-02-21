@@ -6,11 +6,12 @@ import cors from "cors";
 import { medicineRouter } from "./models/medicine/Medicine.routes";
 import { CategoriesRouter } from "./models/categories/categories.routes";
 import { OrderRoutes } from "./models/orders/orders.routes";
+import { ReviewsRouter } from "./models/reviews/reviews.routes";
 
 
 app.all('/api/auth/{*any}', toNodeHandler(auth));
-app.use(express.json()) // * This will allow us to send data in the body of the request
 
+app.use(express.json()) 
 app.use(cors({
     origin: process.env.APP_URL,
     credentials: true
@@ -21,6 +22,8 @@ app.use('/api/medicine',medicineRouter)
 app.use('/api/categories',CategoriesRouter)
 
 app.use('/api/orders',OrderRoutes)
+
+app.use('/api/reviews',ReviewsRouter)
 
 
 app.get("/", (req: Request, res: Response) => {
