@@ -4,7 +4,6 @@ import { orderServices } from "./orders.services";
 import { auth } from "../../lib/auth";
 import { Role } from "../../middleware/auth.middleware";
 
-
 // * Orders created by the customer 
 const createOrders = async (req: Request, res: Response) => {
     try {
@@ -35,7 +34,6 @@ const createOrders = async (req: Request, res: Response) => {
         })
     }
 }
-
 const getCustomerOrders = async (req: Request, res: Response) => {
     try {
         const session = await auth.api.getSession({
@@ -93,20 +91,18 @@ const getSellerOrders = async (req: Request, res: Response) => {
         })
     }
 }
-
 const getOrdersById = async (req: Request, res: Response) => {
     try {
         const session = await auth.api.getSession({
             headers: req.headers as any
         })
-        if (!session) {
+        if (!session || session.user.role !== Role.CUSTOMER) {
             return res.status(401).json({
                 message: "Unauthorized",
                 success: false
             })
         }
         const CustomerId = session.user.id
-
         const result = await orderServices.getOrderById(CustomerId as string)
         res.status(201).json({
             success: true,
@@ -121,12 +117,8 @@ const getOrdersById = async (req: Request, res: Response) => {
     }
 }
 
-
-
-
 export const orderController = {
     createOrders,
-  
     getSellerOrders,
     getOrdersById,
     getCustomerOrders
