@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { CategoriesController } from "./categories.controller";
+import AuthMiddleware, { Role } from "../../middleware/auth.middleware";
 
 const router = Router()
 

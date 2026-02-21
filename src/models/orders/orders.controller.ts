@@ -67,26 +67,19 @@ const getSellerOrders = async (req: Request, res: Response) => {
         const session = await auth.api.getSession({
             headers: req.headers as any
         })
-
         if (!session || session.user.role === Role.SELLER) {
             return res.status(401).json({
                 message: "Unauthorized",
                 success: false
             })
         }
-
-        const sellerId = req.user?.id
-
-        const result = await orderServices.getSellerOrders(sellerId as string)
-
+       const sellerId = req.user?.id
+        const result = await orderServices.getSelleOrders(sellerId as string)
         res.status(201).json({
             success: true,
             data: result,
             message: "Order get Successfully"
         })
-
-
-
     } catch (err: any) {
         res.status(500).json({
             message: "Failed to get the order",
@@ -104,6 +97,14 @@ const getAllOrders = async (req: Request, res: Response) => {
             data: result,
             message: "Order get Successfully"
         })
+
+        if(!result || result.length===0){
+           return res.status(201).json({
+                success: true,
+                message: "Orders are empty"
+            })
+        }
+
     } catch (err) {
         res.status(500).json({
             message: "Failed to get the order",
@@ -115,8 +116,18 @@ const getAllOrders = async (req: Request, res: Response) => {
 
 const getOrdersById = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params
-        const result = await orderServices.getOrderById(id as string)
+        const session = await auth.api.getSession({
+            headers: req.headers as any
+        })
+        if (!session) {
+            return res.status(401).json({
+                message: "Unauthorized",
+                success: false
+            })
+        }
+        const CustomerId = req.user?.id
+
+        const result = await orderServices.getOrderById(CustomerId as string)
         res.status(201).json({
             success: true,
             data: result,

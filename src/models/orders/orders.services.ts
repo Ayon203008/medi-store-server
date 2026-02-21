@@ -53,22 +53,19 @@ const getSelleOrders=async(sellerId:string)=>{
     return result
 }
 
-
-
 const getAllOrder=async()=>{
     const result= await prisma.orders.findMany()
     return result
 }
 
-const getOrderById=async(id:string)=>{
+const getOrderById=async(CustomerId:string)=>{
     const result= await prisma.orders.findUnique({
         where:{
-            id:id
+            id:CustomerId
         }
     })
     return result
 }
-
 
 export const  orderServices={
     createOrder,

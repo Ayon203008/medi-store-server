@@ -4,9 +4,6 @@ import { medicineServices } from "./Medicine.services"
 
 const createMedicine = async (req: Request, res: Response) => {
     try {
-
-
-
         const result = await medicineServices.createMedicine(req.body)
         res.status(200).json({
             message: "Medicine inserted successfully",
@@ -26,6 +23,14 @@ const getAllMedicine = async (req: Request, res: Response) => {
     try {
         const query=req.query   // * Sending qureies to the services
         const result = await medicineServices.getAllMedicine(query)
+
+        if( !result ||result.length===0){
+            return res.status(200).json({
+                message: "No medicine found",
+                success: false
+            })
+        }
+
         res.status(200).json({
             message: "Medicine fetched successfully",
             success: true,
@@ -67,7 +72,7 @@ const updateMedicine = async (req: Request, res: Response) => {
         const result= await medicineServices.updateMedicine(id as string,req.body)
 
         res.status(200).json({
-            message: "Medicine updatedt successfully",
+            message: "Medicine updated successfully",
             success: true,
             data: result
         })

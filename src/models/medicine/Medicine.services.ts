@@ -1,8 +1,24 @@
+import { includes } from "better-auth"
 import { prisma } from "../../lib/prisma"
 
 const createMedicine = async (medeicineData: any) => {
     const result = await prisma.medicines.create({
-        data: medeicineData
+        data: medeicineData,
+        include:{
+            Category:{
+                select:{
+                    name:true,
+                    description:true
+                }
+            },
+            Seller:{
+               select:{
+                name:true,
+                email:true,
+                id:true
+               }
+            }
+        }
     })
     return result
 
@@ -29,7 +45,19 @@ const getAllMedicine = async (query:any) => {
     const result = await prisma.medicines.findMany({
         where:filter,
         include:{
-            Category:true
+            Category:{
+                select:{
+                    name:true,
+                    description:true
+                }
+            },
+            Seller:{
+                select:{
+                    name:true,
+                    email:true,
+                    id:true
+                }
+            }
         }
     })
     return result
