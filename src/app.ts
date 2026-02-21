@@ -16,7 +16,6 @@ app.use(cors({
     credentials: true
 }))
 
-
 app.use('/api/medicine',medicineRouter)
 
 app.use('/api/categories',CategoriesRouter)

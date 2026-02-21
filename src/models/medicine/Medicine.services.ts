@@ -9,8 +9,29 @@ const createMedicine = async (medeicineData: any) => {
 }
 
 
-const getAllMedicine = async () => {
-    const result = await prisma.medicines.findMany()
+const getAllMedicine = async (query:any) => {
+
+    const {name,manufacturer,category}=query // * filtering mechanism
+
+    const filter:any={}
+    if(name){
+        filter.name={contains:name,mode:"insensitive"}
+    }
+
+    if(manufacturer){
+        filter.manufacturer={contains:manufacturer,mode:"insensitive"}
+    }
+
+    if(category){
+        filter.category={contains:category,mode:"insensitive"}
+    }
+
+    const result = await prisma.medicines.findMany({
+        where:filter,
+        include:{
+            Category:true
+        }
+    })
     return result
 }
 

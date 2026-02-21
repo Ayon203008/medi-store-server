@@ -5,17 +5,17 @@ import AuthMiddleware, { Role } from "../../middleware/auth.middleware";
 
 const router = Router()
 
-// * only admin and seller can create medicine 
 
-router.post('/',AuthMiddleware(Role.SELLER,Role.ADMIN),MedicineController.createMedicine)
+router.post('/',AuthMiddleware(Role.SELLER),MedicineController.createMedicine)
 
+// * public
 router.get('/',MedicineController.getAllMedicine)
-
+// * public
 router.get('/:id',MedicineController.getMedicineById)
 
-router.put('/:id',MedicineController.updateMedicine)
+router.put('/:id',AuthMiddleware(Role.SELLER),MedicineController.updateMedicine)
 
-router.delete('/:id',MedicineController.deleteMedicine)
+router.delete('/:id',AuthMiddleware(Role.SELLER),MedicineController.deleteMedicine)
 
 export const medicineRouter: Router = router
 

@@ -24,8 +24,8 @@ const createMedicine = async (req: Request, res: Response) => {
 }
 const getAllMedicine = async (req: Request, res: Response) => {
     try {
-
-        const result = await medicineServices.getAllMedicine()
+        const query=req.query   // * Sending qureies to the services
+        const result = await medicineServices.getAllMedicine(query)
         res.status(200).json({
             message: "Medicine fetched successfully",
             success: true,
