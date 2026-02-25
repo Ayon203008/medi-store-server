@@ -1,20 +1,9 @@
 import { Request, Response } from "express"
-import { auth } from "../../lib/auth"
 import { UserServices } from "./user.services"
-import { Role } from "../../middleware/auth.middleware"
+
 
 const updateUser=async(req:Request,res:Response)=>{
     try{
-        const session=await auth.api.getSession({
-            headers:req.headers as any
-        })
-        if(!session || session.user.role!==Role.ADMIN){
-            return res.status(401).json({
-                message:"Unauthorized",
-                success:false
-            })
-        }
-  
         const {role,status}=req.body
         const {id}=req.params
         const result= await UserServices.updateUser(id as string,role,status as string)
@@ -34,7 +23,6 @@ const updateUser=async(req:Request,res:Response)=>{
 
 const getAllUser=async(req:Request,res:Response)=>{
     try{
-
         const result = await UserServices.getAllUser()
         res.status(200).json({
             message:"All users fetched successfully",

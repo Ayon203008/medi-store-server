@@ -9,3 +9,4 @@ router.put("/:id",AuthMiddleware(Role.ADMIN),UserController.updateUser)
 router.get("/",AuthMiddleware(Role.ADMIN),UserController.getAllUser)
 
 export const UserRouter = router
+
