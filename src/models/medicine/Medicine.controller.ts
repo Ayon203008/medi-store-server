@@ -4,7 +4,17 @@ import { medicineServices } from "./Medicine.services"
 
 const createMedicine = async (req: Request, res: Response) => {
     try {
-        const result = await medicineServices.createMedicine(req.body)
+
+        const sellerId =req.user?.id
+
+        if(!sellerId){
+            return res.status(401).json({
+                message:"UNauthorized",
+                success:false
+            })
+        }
+
+        const result = await medicineServices.createMedicine(req.body,sellerId as string)
         res.status(200).json({
             message: "Medicine inserted successfully",
             success: true,

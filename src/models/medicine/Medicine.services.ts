@@ -1,9 +1,11 @@
 import { includes } from "better-auth"
 import { prisma } from "../../lib/prisma"
 
-const createMedicine = async (medeicineData: any) => {
+const createMedicine = async (medeicineData: any, sellerId: string) => {
     const result = await prisma.medicines.create({
-        data: medeicineData,
+        data:{ ...medeicineData,
+            Seller_id:sellerId
+        },
         include:{
             Category:{
                 select:{

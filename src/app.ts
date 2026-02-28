@@ -8,15 +8,15 @@ import { CategoriesRouter } from "./models/categories/categories.routes";
 import { OrderRoutes } from "./models/orders/orders.routes";
 import { ReviewsRouter } from "./models/reviews/reviews.routes";
 import { UserRouter } from "./models/user/user.routes";
-
-
-app.all('/api/auth/{*any}', toNodeHandler(auth));
-
-app.use(express.json()) 
 app.use(cors({
     origin: process.env.APP_URL,
     credentials: true
 }))
+
+app.use(express.json()) 
+app.all('/api/auth/*splat', toNodeHandler(auth));
+
+
 
 app.use('/api/medicine',medicineRouter)
 
