@@ -45,6 +45,22 @@ model Medicines {
   updatedAt DateTime  @updatedAt
   reviews   Reviews[]
   orders    Orders[]
+  carts     Cart[]
+}
+
+model Cart {
+  id        String   @id @default(uuid())
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+
+  Customer_id String
+  Customer    User   @relation(fields: [Customer_id], references: [id])
+
+  Medicine_id String
+  Medicine    Medicines @relation(fields: [Medicine_id], references: [id])
+
+  @@unique([Customer_id,Medicine_id])
+
 }
 
 model Orders {
@@ -107,6 +123,7 @@ model User {
   reviews        Reviews[]
   CustomerOrders Orders[]  @relation("CustomerOrders")
   SellerOrders   Orders[]  @relation("SellerOrders")
+  carts          Cart[]
 
   @@map("user")
 }

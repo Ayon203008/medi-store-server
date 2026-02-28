@@ -8,6 +8,7 @@ import { CategoriesRouter } from "./models/categories/categories.routes";
 import { OrderRoutes } from "./models/orders/orders.routes";
 import { ReviewsRouter } from "./models/reviews/reviews.routes";
 import { UserRouter } from "./models/user/user.routes";
+import { cartRouter } from "./models/cart/cart.routes";
 app.use(cors({
     origin: process.env.APP_URL,
     credentials: true
@@ -27,6 +28,8 @@ app.use('/api/orders',OrderRoutes)
 app.use('/api/reviews',ReviewsRouter)
 
 app.use('/api/user',UserRouter)
+
+app.use('/api/cart',cartRouter)
 
 
 app.get("/", (req: Request, res: Response) => {

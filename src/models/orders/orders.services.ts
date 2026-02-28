@@ -49,6 +49,10 @@ const getCustomerOrders=async(customerId:string)=>{
     const result= await prisma.orders.findMany({
         where:{
             Customer_id:customerId
+        },
+        include:{
+            Medicine:true,
+            Seller:true
         }
     })
     return result
@@ -59,6 +63,10 @@ const getSelleOrders=async(sellerId:string)=>{
     const result = await prisma.orders.findMany({
         where:{
             Seller_id:sellerId
+        },
+        include:{
+            Medicine:true,
+            Customer:true
         }
     })
     return result
@@ -91,10 +99,22 @@ const UpdateOrders=async(SellerId:string,status:any,id:string)=>{
     return result
 }
 
+const getAllOrders=async()=>{
+    const result = await prisma.orders.findMany({
+        include:{
+            Customer:true,
+            Seller:true,
+            Medicine:true
+        },
+    })
+    return result
+}
+
 export const  orderServices={
     createOrder,
     getCustomerOrders,
     getOrderById,
     getSelleOrders,
-    UpdateOrders
+    UpdateOrders,
+    getAllOrders
 }
