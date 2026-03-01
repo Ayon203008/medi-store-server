@@ -11,28 +11,28 @@ const createReview = async (reviewData: any, CustomerId: string) => {
 }
 
 
-
-const deleteReview = async (id: string) => {
-    const result = await prisma.reviews.delete({
-        where: {
-            id: id
-        }
-    })
-    return result
-}
-
-const updateReview = async (id: string, updateData: any) => {
-    const result = await prisma.reviews.update({
-        where: {
-            id: id
+const getReviews=async(medicineId:string)=>{
+    const result = await prisma.reviews.findMany({
+        where:{
+            medicine_id:medicineId
         },
-        data: updateData
+        include:{
+            Customer :{
+                select:{
+                    name:true,
+                    email:true,
+                    image:true
+                }
+            }
+        },
+        orderBy:{
+            createdAt:"desc"
+        }
     })
     return result
 }
 
 export const ReviewsServices = {
     createReview,
-    deleteReview,
-    updateReview
+    getReviews
 }

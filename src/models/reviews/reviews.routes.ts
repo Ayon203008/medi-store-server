@@ -6,9 +6,7 @@ const  router:Router = Router()
 
 router.post("/",AuthMiddleware(Role.CUSTOMER),ReviewsController.createReview)
 
-router.put("/:id",ReviewsController.updateReview)
-
-router.delete("/:id",ReviewsController.deleteReview)
+router.get("/:id",ReviewsController.getReviews)
 
 export const ReviewsRouter = router
 
