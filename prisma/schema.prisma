@@ -60,7 +60,6 @@ model Cart {
   Medicine    Medicines @relation(fields: [Medicine_id], references: [id])
 
   @@unique([Customer_id,Medicine_id])
-
 }
 
 model Orders {

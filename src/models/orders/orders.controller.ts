@@ -7,19 +7,8 @@ import { Role } from "../../middleware/auth.middleware";
 // * Orders created by the customer 
 const createOrders = async (req: Request, res: Response) => {
     try {
-        const session = await auth.api.getSession({
-            headers: req.headers as any
-        })
-        if (!session) {
-            return res.status(401).json({
-                message: "Unauthorized",
-                success: false
-            })
-        }
-
-       
-        const customerId = session.user.id
-
+      
+        const customerId = req.user?.id
         const result = await orderServices.createOrder(req.body, customerId as string)
         res.status(201).json({
             success: true,

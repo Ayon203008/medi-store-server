@@ -1,12 +1,40 @@
 import { prisma } from "../../lib/prisma"
 
-const addTocard=async(cartData:any)=>{
-    const result = await prisma.categories.create({
-        data:cartData
+const addTocart=async(cartData:any,CustomerId:string)=>{
+    const result = await prisma.cart.create({
+        data:{
+            ...cartData,
+            Customer_id:CustomerId
+        }
     })
     return result
 }
 
+const getAllCart=async(CustomerId:string)=>{
+    const result = await prisma.cart.findMany({
+        where:{
+            Customer_id:CustomerId
+        },
+        include:{
+            Medicine:true
+        }
+    })
+    return result
+}
+
+
+const deleteCart=async(id:string)=>{
+    const result = await prisma.cart.delete({
+        where:{
+            id:id
+        }
+    })
+    return result
+}
+
+
 export const cartServices={
-    addtoCart:addTocard
+    addTocart,
+    deleteCart,
+    getAllCart
 }

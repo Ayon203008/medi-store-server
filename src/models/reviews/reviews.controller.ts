@@ -5,21 +5,10 @@ import { Role } from "../../middleware/auth.middleware"
 
 const createReview = async (req: Request, res: Response) => {
     try {
-
-        const session= await auth.api.getSession({
-            headers:req.headers as any
-        })
-
-        if(!session || session.user.role!==Role.CUSTOMER){
-            return res.status(401).json({
-                message:"Unauthorized",
-                success:false
-            })
-        }
-
-        const customerId=session.user.id
-
-        const result = await ReviewsServices.createReview(req.body,customerId as string)
+        const CustomerId=req.user?.id
+       
+    
+        const result = await ReviewsServices.createReview(req.body,CustomerId as string)
         res.status(200).json({
             message: "Review inserted successfully",
             success: true,

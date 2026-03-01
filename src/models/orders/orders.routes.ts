@@ -8,7 +8,7 @@ import AuthMiddleware, { Role } from "../../middleware/auth.middleware";
 
 const router=Router()
 
-router.post("/",orderController.createOrders)
+router.post("/",AuthMiddleware(Role.CUSTOMER),orderController.createOrders)
 
 router.get("/customer",AuthMiddleware(Role.CUSTOMER),orderController.getCustomerOrders)
 

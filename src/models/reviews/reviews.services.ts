@@ -1,10 +1,10 @@
 import { prisma } from "../../lib/prisma"
 
-const createReview = async (reviewData: any, customerId: string) => {
+const createReview = async (reviewData: any, CustomerId: string) => {
     const result = await prisma.reviews.create({
         data: {
             ...reviewData,
-            customer_id: customerId
+            customer_id: CustomerId
         }
     })
     return result
